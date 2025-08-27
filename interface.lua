@@ -402,7 +402,7 @@ function EchnoLibrary:CreateWindow(title, subtitle)
     settingsTitle.Name = "SettingsTitle"
     settingsTitle.Size = UDim2.new(1, 0, 0, 40)
     settingsTitle.BackgroundTransparency = 1
-    settingsTitle.Text = "Settings"
+    settingsTitle.Text = "Paramètres"
     settingsTitle.TextColor3 = CurrentTheme.Text
     settingsTitle.TextSize = 16
     settingsTitle.Font = Enum.Font.GothamBold
@@ -414,7 +414,7 @@ function EchnoLibrary:CreateWindow(title, subtitle)
     themeLabel.Size = UDim2.new(1, -20, 0, 20)
     themeLabel.Position = UDim2.new(0, 10, 0, 50)
     themeLabel.BackgroundTransparency = 1
-    themeLabel.Text = "Accent Color:"
+    themeLabel.Text = "Couleur d'accent:"
     themeLabel.TextColor3 = CurrentTheme.Text
     themeLabel.TextSize = 12
     themeLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -425,6 +425,21 @@ function EchnoLibrary:CreateWindow(title, subtitle)
         CurrentTheme.Accent = color
         SaveSettings()
         -- Update all GUI elements with new theme
+        for _, gui in pairs(CreatedGuis) do
+            if gui and gui.Parent then
+                local function updateElement(element)
+                    if element:IsA("TextButton") or element:IsA("Frame") then
+                        if element.Name:find("Accent") or element.BackgroundColor3 == CurrentTheme.Accent then
+                            element.BackgroundColor3 = color
+                        end
+                    end
+                    for _, child in pairs(element:GetChildren()) do
+                        updateElement(child)
+                    end
+                end
+                updateElement(gui)
+            end
+        end
     end)
     colorPicker.Position = UDim2.new(0, 10, 0, 80)
     colorPicker.Size = UDim2.new(1, -20, 0, 100)
@@ -435,7 +450,7 @@ function EchnoLibrary:CreateWindow(title, subtitle)
     keybindLabel.Size = UDim2.new(1, -20, 0, 20)
     keybindLabel.Position = UDim2.new(0, 10, 0, 200)
     keybindLabel.BackgroundTransparency = 1
-    keybindLabel.Text = "Toggle Key:"
+    keybindLabel.Text = "Touche de basculement:"
     keybindLabel.TextColor3 = CurrentTheme.Text
     keybindLabel.TextSize = 12
     keybindLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -462,7 +477,7 @@ function EchnoLibrary:CreateWindow(title, subtitle)
     keybindButton.MouseButton1Click:Connect(function()
         if not listeningForKey then
             listeningForKey = true
-            keybindButton.Text = "Press any key..."
+            keybindButton.Text = "Appuyez sur une touche..."
             
             local connection
             connection = UserInputService.InputBegan:Connect(function(input)
@@ -1011,7 +1026,51 @@ end
 function EchnoLibrary:SetTheme(theme)
     CurrentTheme = theme
     SaveSettings()
-    -- You would need to update all existing GUI elements here
+    
+    -- Update all existing GUI elements with the new theme
+    for _, gui in pairs(CreatedGuis) do
+        if gui and gui.Parent then
+            local function updateElementColors(element)
+                if element:IsA("Frame") then
+                    if element.Name == "MainFrame" then
+                        element.BackgroundColor3 = CurrentTheme.Primary
+                    elseif element.Name == "TitleBar" or element.Name == "SettingsPanel" then
+                        element.BackgroundColor3 = CurrentTheme.Secondary
+                    elseif element.Name == "TabContainer" then
+                        element.BackgroundColor3 = CurrentTheme.Background
+                    elseif element.Name:find("Toggle_") then
+                        element.BackgroundColor3 = CurrentTheme.Secondary
+                    end
+                elseif element:IsA("TextButton") then
+                    if element.Name == "SettingsButton" then
+                        element.BackgroundColor3 = CurrentTheme.Accent
+                    elseif element.Name == "CloseButton" then
+                        element.BackgroundColor3 = CurrentTheme.Error
+                    elseif element.Name:find("Tab_") then
+                        element.BackgroundColor3 = CurrentTheme.Secondary
+                    elseif element.Name:find("Button_") then
+                        element.BackgroundColor3 = CurrentTheme.Secondary
+                    elseif element.Name == "KeybindButton" then
+                        element.BackgroundColor3 = CurrentTheme.Secondary
+                    end
+                elseif element:IsA("TextLabel") then
+                    if element.Name == "Title" or element.Name == "SettingsTitle" then
+                        element.TextColor3 = CurrentTheme.Text
+                    elseif element.Name == "Subtitle" then
+                        element.TextColor3 = CurrentTheme.TextSecondary
+                    end
+                elseif element:IsA("ScrollingFrame") then
+                    element.ScrollBarImageColor3 = CurrentTheme.Accent
+                end
+                
+                -- Recursively update children
+                for _, child in pairs(element:GetChildren()) do
+                    updateElementColors(child)
+                end
+            end
+            updateElementColors(gui)
+        end
+    end
 end
 
 function EchnoLibrary:GetTheme()
