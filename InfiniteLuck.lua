@@ -4,6 +4,21 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
+-- Détection du jeu spécifique
+local placeId = game.PlaceId
+local isStealANoob = (placeId == 88653314831572)
+
+-- Debug: afficher l'ID pour vérifier
+print("🔍 Place ID détecté: " .. tostring(placeId))
+print("🎯 Steal A Noob attendu: 88653314831572")
+
+-- Configuration selon le jeu
+local gameConfig = {
+    duration = isStealANoob and 3 or 15, -- 3 min pour Steal A Noob, 15 min pour les autres
+    cost = isStealANoob and 45 or 29,    -- 45 R$ pour Steal A Noob, 29 R$ pour les autres
+    gameName = isStealANoob and "Steal A Noob" or "Jeu standard"
+}
+
 local RemoteLuck = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):FindFirstChild("ServerLuck")
 
 if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
@@ -56,10 +71,10 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     local Title = Instance.new("TextLabel")
     Title.Size = UDim2.new(1, -55, 1, 0)
     Title.Position = UDim2.new(0, 20, 0, 0)
-    Title.Text = "Luck Booster"
+    Title.Text = "Luck Booster - " .. gameConfig.gameName
     Title.TextColor3 = Color3.fromRGB(46, 52, 64)
     Title.Font = Enum.Font.GothamMedium
-    Title.TextSize = 22
+    Title.TextSize = 20
     Title.BackgroundTransparency = 1
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.Parent = TitleBar
@@ -133,7 +148,7 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     local InfoLabel = Instance.new("TextLabel")
     InfoLabel.Size = UDim2.new(1, -50, 0, 20)
     InfoLabel.Position = UDim2.new(0, 45, 0, 28)
-    InfoLabel.Text = "📊 Tarif normal: 29 R$ pour 15min de luck"
+    InfoLabel.Text = string.format("📊 Tarif normal: %d R$ pour %dmin de luck", gameConfig.cost, gameConfig.duration)
     InfoLabel.TextColor3 = Color3.fromRGB(46, 52, 64)
     InfoLabel.Font = Enum.Font.Gotham
     InfoLabel.TextSize = 11
@@ -243,7 +258,7 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     end
     
     local function updateSavings()
-        local savedRobux = totalBoosts * 29
+        local savedRobux = totalBoosts * gameConfig.cost
         SavingsLabel.Text = string.format("💎 Économisé: %d R$ (%d luck boosts)", savedRobux, totalBoosts)
         
         updateTheme()
@@ -322,12 +337,25 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     sectionLabel2.LayoutOrder = 3
     sectionLabel2.Parent = ScrollFrame
 
-    local times = {
-        ["30min"] = {iterations = 2, color = Color3.fromRGB(180, 142, 173)},
-        ["1h"] = {iterations = 4, color = Color3.fromRGB(208, 135, 112)},
-        ["2h"] = {iterations = 8, color = Color3.fromRGB(235, 203, 139)},
-        ["5h"] = {iterations = 20, color = Color3.fromRGB(163, 190, 140)},
-    }
+    -- Ajustement des durées selon le jeu
+    local times
+    if isStealANoob then
+        -- Pour Steal A Noob (3 min par boost au lieu de 15)
+        times = {
+            ["15min"] = {iterations = 5, color = Color3.fromRGB(180, 142, 173)},
+            ["30min"] = {iterations = 10, color = Color3.fromRGB(208, 135, 112)},
+            ["1h"] = {iterations = 20, color = Color3.fromRGB(235, 203, 139)},
+            ["2h"] = {iterations = 40, color = Color3.fromRGB(163, 190, 140)},
+        }
+    else
+        -- Pour les autres jeux (15 min par boost)
+        times = {
+            ["30min"] = {iterations = 2, color = Color3.fromRGB(180, 142, 173)},
+            ["1h"] = {iterations = 4, color = Color3.fromRGB(208, 135, 112)},
+            ["2h"] = {iterations = 8, color = Color3.fromRGB(235, 203, 139)},
+            ["5h"] = {iterations = 20, color = Color3.fromRGB(163, 190, 140)},
+        }
+    end
 
     local layoutOrder = 4
     local running = {}
@@ -477,7 +505,14 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
             return
         end
         
-        local iterations = hours * 4
+        -- Calcul des itérations selon le jeu
+        local iterations
+        if isStealANoob then
+            iterations = hours * 20 -- 20 boosts par heure (3min chacun)
+        else
+            iterations = hours * 4  -- 4 boosts par heure (15min chacun)
+        end
+        
         customRunning = true
         CustomButton.BackgroundColor3 = Color3.fromRGB(216, 222, 233)
         CustomButton.Text = hours .. "h actif"
@@ -548,7 +583,7 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
 
     local creditMessages = {
         "🎨 Script créé par Kajoul",
-        "⚡ Version 2.0 - Optimisé",
+        "⚡ Version 2.1 - Auto-détection",
         "🌟 Interface moderne & fluide",
         "💎 Merci d'utiliser le script!",
         "🚀 Enjoy your luck boost!"
@@ -602,6 +637,15 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     
     wait(0.1)
     updateScrollSize()
+    
+    -- Affichage d'un message de détection du jeu
+    if isStealANoob then
+        print("🎯 Jeu détecté: Steal A Noob")
+        print("📊 Configuration ajustée: " .. gameConfig.cost .. " R$ pour " .. gameConfig.duration .. " min")
+    else
+        print("🎮 Jeu standard détecté")
+        print("📊 Configuration standard: " .. gameConfig.cost .. " R$ pour " .. gameConfig.duration .. " min")
+    end
     
     UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if gameProcessed then return end
