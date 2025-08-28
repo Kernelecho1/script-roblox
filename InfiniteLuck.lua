@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
 local RemoteLuck = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Events"):FindFirstChild("ServerLuck")
@@ -166,31 +167,31 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
             color1 = Color3.fromRGB(163, 190, 140),
             color2 = Color3.fromRGB(180, 210, 160),
             icon = "💰",
-            title = "Clodo de merde"
+            title = "Économies débutant"
         },
         {
             color1 = Color3.fromRGB(180, 142, 173),
             color2 = Color3.fromRGB(200, 160, 190),
             icon = "💎",
-            title = "t un negro"
+            title = "Économies intermédiaire"
         },
         {
             color1 = Color3.fromRGB(208, 135, 112),
             color2 = Color3.fromRGB(230, 155, 130),
             icon = "🏆",
-            title = "ouai pas mal"
+            title = "Économies expert"
         },
         {
             color1 = Color3.fromRGB(235, 203, 139),
             color2 = Color3.fromRGB(255, 220, 160),
             icon = "👑",
-            title = "Arahhhh"
+            title = "Maître des économies"
         },
         {
             color1 = Color3.fromRGB(255, 215, 0),
             color2 = Color3.fromRGB(255, 255, 100),
             icon = "⭐",
-            title = "Starfoullah"
+            title = "Légende dorée"
         }
     }
     
@@ -547,7 +548,8 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
 
     local creditMessages = {
         "🎨 Script créé par Kajoul",
-        "⚡ Version 1.0",
+        "⚡ Version 2.0 - Optimisé",
+        "🌟 Interface moderne & fluide",
         "💎 Merci d'utiliser le script!",
         "🚀 Enjoy your luck boost!"
     }
@@ -600,6 +602,32 @@ if RemoteLuck and RemoteLuck:IsA("RemoteEvent") then
     
     wait(0.1)
     updateScrollSize()
+    
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.G then
+            if ScreenGui.Enabled then
+                local closeTween = TweenService:Create(Frame, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                    Size = UDim2.new(0, 0, 0, 0),
+                    Position = UDim2.new(0.5, 0, 0.5, 0)
+                })
+                closeTween:Play()
+                closeTween.Completed:Connect(function()
+                    ScreenGui.Enabled = false
+                end)
+            else
+                ScreenGui.Enabled = true
+                Frame.Size = UDim2.new(0, 0, 0, 0)
+                Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+                
+                local openTween = TweenService:Create(Frame, TweenInfo.new(0.6, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 360, 0, 470),
+                    Position = UDim2.new(0.5, -180, 0.5, -235)
+                })
+                openTween:Play()
+            end
+        end
+    end)
     
 else
     warn("⚠️ Remote 'ServerLuck' introuvable dans ReplicatedStorage.Remotes.Events")
