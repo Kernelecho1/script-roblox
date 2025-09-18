@@ -12,7 +12,7 @@ local Camera = workspace.CurrentCamera
 
 local Window = Rayfield:CreateWindow({
     Name = "Prostone Hub - schibuya rp",
-    LoadingTitle = "Chargement du Script",
+    LoadingTitle = "t une slp fdp ...",
     LoadingSubtitle = "par Prostone Hub",
     Theme = "DarkBlue",
     SyncConfigSettings = true,
