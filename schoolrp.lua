@@ -12,7 +12,7 @@ local Camera = workspace.CurrentCamera
 
 local Window = Rayfield:CreateWindow({
     Name = "Prostone Hub - schibuya rp",
-    LoadingTitle = "t une slp fdp ...",
+    LoadingTitle = "Chargement du Script",
     LoadingSubtitle = "par Prostone Hub",
     Theme = "DarkBlue",
     SyncConfigSettings = true,
@@ -835,8 +835,89 @@ local ESPObjects = {}
 local ESPEnabled = false
 local NamesEnabled = false
 local TeamCheckEnabled = false
+local StaffDetectionEnabled = false
+local StaffNotificationGui = nil
 
 local ESPSection = ESPTab:CreateSection("ESP Options")
+
+local function CreateStaffNotification(staffPlayerName)
+    if StaffNotificationGui then
+        StaffNotificationGui:Destroy()
+    end
+    
+    StaffNotificationGui = Instance.new("ScreenGui")
+    local NotificationFrame = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local TitleLabel = Instance.new("TextLabel")
+    local StaffLabel = Instance.new("TextLabel")
+    
+    StaffNotificationGui.Name = "StaffNotification"
+    StaffNotificationGui.Parent = game.CoreGui
+    StaffNotificationGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    NotificationFrame.Name = "NotificationFrame"
+    NotificationFrame.Parent = StaffNotificationGui
+    NotificationFrame.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+    NotificationFrame.BorderSizePixel = 0
+    NotificationFrame.Position = UDim2.new(0.02, 0, 0.9, 0)
+    NotificationFrame.Size = UDim2.new(0, 250, 0, 60)
+    
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = NotificationFrame
+    
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Parent = NotificationFrame
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Position = UDim2.new(0.05, 0, 0.1, 0)
+    TitleLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
+    TitleLabel.Font = Enum.Font.SourceSansBold
+    TitleLabel.Text = "🚨 STAFF DETECTE 🚨"
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.TextSize = 14
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+    
+    StaffLabel.Name = "StaffLabel"
+    StaffLabel.Parent = NotificationFrame
+    StaffLabel.BackgroundTransparency = 1
+    StaffLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
+    StaffLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
+    StaffLabel.Font = Enum.Font.SourceSansBold
+    StaffLabel.Text = staffPlayerName
+    StaffLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    StaffLabel.TextSize = 12
+    StaffLabel.TextXAlignment = Enum.TextXAlignment.Center
+    
+    NotificationFrame.Position = UDim2.new(0.02, 0, 1.1, 0)
+    local slideIn = TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0.02, 0, 0.85, 0)})
+    slideIn:Play()
+    
+    wait(5)
+    
+    local slideOut = TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(-0.3, 0, 0.85, 0)})
+    slideOut:Play()
+    slideOut.Completed:Wait()
+    
+    if StaffNotificationGui then
+        StaffNotificationGui:Destroy()
+        StaffNotificationGui = nil
+    end
+end
+
+local function CheckForStaff()
+    if not StaffDetectionEnabled then return end
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Team then
+            local teamName = player.Team.Name:lower()
+            if teamName:find("staff") or teamName:find("admin") or teamName:find("moderator") or teamName:find("mod") then
+                spawn(function()
+                    CreateStaffNotification(player.Name)
+                end)
+                print("Prostone Hub - Staff détecté: " .. player.Name .. " (Team: " .. player.Team.Name .. ")")
+            end
+        end
+    end
+end
 
 local function CreateESP(player)
     if player == LocalPlayer then return end
@@ -986,6 +1067,23 @@ local TeamCheckToggle = ESPTab:CreateToggle({
     Callback = function(Value)
         TeamCheckEnabled = Value
         RefreshESP()
+    end,
+})
+
+local StaffDetectionToggle = ESPTab:CreateToggle({
+    Name = "Détection Staff",
+    CurrentValue = false,
+    Flag = "StaffDetectionToggle",
+    Callback = function(Value)
+        StaffDetectionEnabled = Value
+        if Value then
+            CheckForStaff()
+        else
+            if StaffNotificationGui then
+                StaffNotificationGui:Destroy()
+                StaffNotificationGui = nil
+            end
+        end
     end,
 })
 
