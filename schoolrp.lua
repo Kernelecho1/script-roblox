@@ -968,13 +968,13 @@ local function CreateStaffNotification(staffPlayerName)
     MainContainer.Parent = StaffNotificationGui
     MainContainer.BackgroundColor3 = Color3.fromRGB(25, 30, 45)
     MainContainer.BorderSizePixel = 0
-    
+
     -- Calculer la position en fonction du nombre de notifications existantes
     local notificationCount = 0
     for _, _ in pairs(StaffNotifications) do
         notificationCount = notificationCount + 1
     end
-    
+
     MainContainer.Position = UDim2.new(1, 10, 0.02 + (notificationCount * 0.12), 0)
     MainContainer.Size = UDim2.new(0, 360, 0, 80)
 
@@ -1070,7 +1070,7 @@ local function CreateStaffNotification(staffPlayerName)
         if StaffNotifications[staffPlayerName] then
             StaffNotifications[staffPlayerName] = nil
         end
-        
+
         if StaffNotificationGui then
             StaffNotificationGui:Destroy()
         end
@@ -1085,7 +1085,7 @@ local function CreateStaffNotification(staffPlayerName)
             CloseNotification()
         end
     end)
-    
+
     return StaffNotificationGui
 end
 
@@ -1097,7 +1097,7 @@ local function StartStaffMonitoring()
     if StaffCheckConnection then
         StaffCheckConnection:Disconnect()
     end
-    
+
     StaffCheckConnection = game:GetService("RunService").Heartbeat:Connect(function()
         if StaffDetectionEnabled then
             -- Vérifier les staffs toutes les 2 secondes environ
@@ -1160,7 +1160,7 @@ local function CheckForStaff(silent)
     -- Auto-quit si activé et qu'il y a des staffs
     if not silent and #staffDetected > 0 and AutoQuitEnabled then
         print("Prostone Hub - Auto-quit activé! " .. #staffDetected .. " staff(s) détecté(s). Déconnexion du serveur...")
-        
+
         -- Créer une notification d'avertissement
         Rayfield:Notify({
             Title = "AUTO-QUIT ACTIVÉ",
@@ -1168,9 +1168,9 @@ local function CheckForStaff(silent)
             Duration = 3,
             Image = 4483362458,
         })
-        
+
         task.wait(2) -- Laisser le temps de voir les notifications
-        
+
         -- Kick du serveur avec message personnalisé
         LocalPlayer:Kick("🚫 PROSTONE HUB - AUTO PROTECTION 🚫\n\n⚠️ Un staff a été détecté dans la partie ⚠️\n\nVous avez été automatiquement déconnecté pour votre sécurité.\n\n🔒 Protection anti-staff activée\n💙 Prostone Hub - discord.gg/RyQFfVrbWR")
     end
@@ -1529,17 +1529,17 @@ local VisualizeStaffButton = ESPTab:CreateButton({
             blinkConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 local time = tick()
                 local alpha = (math.sin(time * 10) + 1) / 2 -- Valeur entre 0 et 1
-                
+
                 if highlight and highlight.Parent then
                     highlight.FillTransparency = 0.1 + (alpha * 0.4)
                     highlight.OutlineTransparency = alpha * 0.3
                 end
-                
+
                 if sphere and sphere.Parent then
                     sphere.Transparency = alpha * 0.5
                     sphere.Position = humanoidRootPart.Position + Vector3.new(0, 15 + math.sin(time * 5) * 3, 0)
                 end
-                
+
                 if warningLabel and warningLabel.Parent then
                     warningLabel.BackgroundTransparency = 0.1 + (alpha * 0.4)
                 end
@@ -1548,19 +1548,19 @@ local VisualizeStaffButton = ESPTab:CreateButton({
             -- Supprimer les marqueurs après 3 secondes
             task.spawn(function()
                 task.wait(3)
-                
+
                 if blinkConnection then
                     blinkConnection:Disconnect()
                 end
-                
+
                 if highlight and highlight.Parent then
                     highlight:Destroy()
                 end
-                
+
                 if sphere and sphere.Parent then
                     sphere:Destroy()
                 end
-                
+
                 if billboard and billboard.Parent then
                     billboard:Destroy()
                 end
@@ -1568,10 +1568,10 @@ local VisualizeStaffButton = ESPTab:CreateButton({
 
             print("Prostone Hub - Marqueur visuel créé sur le staff: " .. staffPlayer.Name)
         end
-        
+
         -- Chercher tous les staffs actuellement connectés
         local staffFound = false
-        
+
         for _, player in pairs(game.Players:GetPlayers()) do
             if player ~= game.Players.LocalPlayer and player.Team then
                 local teamName = player.Team.Name:lower()
@@ -1584,7 +1584,7 @@ local VisualizeStaffButton = ESPTab:CreateButton({
                 end
             end
         end
-        
+
         if staffFound then
             Rayfield:Notify({
                 Title = "Marqueurs Staff",
@@ -1613,6 +1613,105 @@ local AdonisButton = AntiCheatTab:CreateButton({
     Callback = function()
         pcall(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/e1998ee/adonisb1p3ss/refs/heads/main/NeptuneScripts"))()
+        end)
+    end,
+})
+
+-- Variable pour tracker si le bypass a déjà été effectué avec succès
+local BypassACPAlreadyDone = false
+
+local BypassACPButton = AntiCheatTab:CreateButton({
+    Name = "Bypass ACP",
+    Callback = function()
+        pcall(function()
+            -- Vérifier si le bypass a déjà été fait avec succès
+            if BypassACPAlreadyDone then
+                Rayfield:Notify({
+                    Title = "Bypass ACP",
+                    Content = "mais mon reuf ta deja bypass",
+                    Duration = 5,
+                    Image = 4483362458,
+                })
+                print("Prostone Hub - Bypass ACP déjà effectué!")
+                return
+            end
+
+            local success = false
+            local webhookRemotes = {}
+            
+            -- Fonction récursive pour chercher les RemoteEvents nommés "Webhook"
+            local function searchWebhookRemotes(parent)
+                for _, child in pairs(parent:GetChildren()) do
+                    if child:IsA("RemoteEvent") and child.Name == "Webhook" then
+                        table.insert(webhookRemotes, child)
+                    elseif child:IsA("Folder") or child:IsA("Model") then
+                        searchWebhookRemotes(child)
+                    end
+                end
+            end
+            
+            -- Chercher dans ReplicatedStorage
+            if game:GetService("ReplicatedStorage") then
+                searchWebhookRemotes(game:GetService("ReplicatedStorage"))
+            end
+            
+            -- Chercher dans Workspace
+            if workspace then
+                searchWebhookRemotes(workspace)
+            end
+            
+            -- Chercher dans StarterPlayer
+            if game:GetService("StarterPlayer") then
+                searchWebhookRemotes(game:GetService("StarterPlayer"))
+            end
+            
+            -- Bloquer les RemoteEvents trouvés
+            if #webhookRemotes > 0 then
+                for _, remote in pairs(webhookRemotes) do
+                    -- Méthode 1: Détruire le RemoteEvent
+                    pcall(function()
+                        remote:Destroy()
+                    end)
+                    
+                    -- Méthode 2: Remplacer la fonction FireServer
+                    pcall(function()
+                        remote.FireServer = function() end
+                    end)
+                    
+                    -- Méthode 3: Créer un hook qui bloque les appels
+                    pcall(function()
+                        local oldFireServer = remote.FireServer
+                        remote.FireServer = function(...)
+                            -- Bloquer l'appel en ne faisant rien
+                            return
+                        end
+                    end)
+                end
+                success = true
+                print("Prostone Hub - " .. #webhookRemotes .. " RemoteEvent(s) 'Webhook' bloqué(s)")
+            end
+            
+            -- Afficher le résultat
+            if success then
+                -- Marquer que le bypass a été effectué avec succès
+                BypassACPAlreadyDone = true
+                
+                Rayfield:Notify({
+                    Title = "Bypass ACP",
+                    Content = "gg c good fais ce que tu veux",
+                    Duration = 5,
+                    Image = 4483362458,
+                })
+                print("Prostone Hub - Bypass ACP réussi!")
+            else
+                Rayfield:Notify({
+                    Title = "Bypass ACP",
+                    Content = "t sur un executeur nul la honte",
+                    Duration = 5,
+                    Image = 4483362458,
+                })
+                print("Prostone Hub - Bypass ACP échoué - Aucun RemoteEvent 'Webhook' trouvé")
+            end
         end)
     end,
 })
