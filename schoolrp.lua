@@ -70,7 +70,7 @@ local function CreateAntiAFKInterface()
     if AntiAFKGui then
         AntiAFKGui:Destroy()
     end
-    
+
     if getgenv().ProstoneAntiAfkExecuted then
         getgenv().ProstoneAntiAfkExecuted = false
         getgenv().ProstoneTimerActive = false
@@ -83,103 +83,149 @@ local function CreateAntiAFKInterface()
     getgenv().ProstoneAntiAfkExecuted = true
 
     AntiAFKGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
+    local MainContainer = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
-    local CloseButton = Instance.new("TextButton")
+    local UIStroke = Instance.new("UIStroke")
+    local StatusIcon = Instance.new("Frame")
+    local IconCorner = Instance.new("UICorner")
+    local IconLabel = Instance.new("TextLabel")
+    local ContentFrame = Instance.new("Frame")
     local TitleLabel = Instance.new("TextLabel")
     local TimerLabel = Instance.new("TextLabel")
-    local PingTitleLabel = Instance.new("TextLabel")
-    local FPSLabel = Instance.new("TextLabel")
-    local FPSTitleLabel = Instance.new("TextLabel")
-    local PingLabel = Instance.new("TextLabel")
-    local Separator = Instance.new("Frame")
-    local SeparatorUICorner = Instance.new("UICorner")
     local StatusLabel = Instance.new("TextLabel")
+    local CloseButton = Instance.new("TextButton")
+    local CloseCorner = Instance.new("UICorner")
     local CreditsLabel = Instance.new("TextLabel")
 
     AntiAFKGui.Name = "ProstoneAntiAfkGui"
     AntiAFKGui.Parent = game.CoreGui
-    AntiAFKGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    AntiAFKGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    AntiAFKGui.ResetOnSpawn = false
 
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = AntiAFKGui
-    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 30, 45)
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.02, 0, 0.02, 0)
-    MainFrame.Size = UDim2.new(0, 200, 0, 80)
+    -- Container principal avec style moderne
+    MainContainer.Name = "MainContainer"
+    MainContainer.Parent = AntiAFKGui
+    MainContainer.BackgroundColor3 = Color3.fromRGB(25, 30, 45)
+    MainContainer.BorderSizePixel = 0
+    MainContainer.Position = UDim2.new(0.02, 0, 0.02, 0)
+    MainContainer.Size = UDim2.new(0, 340, 0, 90)
 
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = MainFrame
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = MainContainer
 
+    UIStroke.Color = Color3.fromRGB(46, 204, 113)
+    UIStroke.Thickness = 2
+    UIStroke.Parent = MainContainer
+
+    -- Icône de statut
+    StatusIcon.Name = "StatusIcon"
+    StatusIcon.Parent = MainContainer
+    StatusIcon.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+    StatusIcon.BorderSizePixel = 0
+    StatusIcon.Position = UDim2.new(0, 15, 0.5, -18)
+    StatusIcon.Size = UDim2.new(0, 36, 0, 36)
+
+    IconCorner.CornerRadius = UDim.new(0, 18)
+    IconCorner.Parent = StatusIcon
+
+    IconLabel.Name = "IconLabel"
+    IconLabel.Parent = StatusIcon
+    IconLabel.BackgroundTransparency = 1
+    IconLabel.Size = UDim2.new(1, 0, 1, 0)
+    IconLabel.Font = Enum.Font.GothamBold
+    IconLabel.Text = "⚡"
+    IconLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    IconLabel.TextScaled = true
+    IconLabel.TextStrokeTransparency = 0.5
+    IconLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+    -- Contenu texte
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Parent = MainContainer
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Position = UDim2.new(0, 65, 0, 8)
+    ContentFrame.Size = UDim2.new(0, 240, 0, 74)
+
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Parent = ContentFrame
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+    TitleLabel.Size = UDim2.new(1, -35, 0, 24)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.Text = "PROSTONE ANTI-AFK"
+    TitleLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
+    TitleLabel.TextSize = 16
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    TimerLabel.Name = "TimerLabel"
+    TimerLabel.Parent = ContentFrame
+    TimerLabel.BackgroundTransparency = 1
+    TimerLabel.Position = UDim2.new(0, 0, 0, 25)
+    TimerLabel.Size = UDim2.new(0.6, 0, 0, 20)
+    TimerLabel.Font = Enum.Font.GothamBold
+    TimerLabel.Text = "Temps: 0:00:00"
+    TimerLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TimerLabel.TextSize = 13
+    TimerLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TimerLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Parent = ContentFrame
+    StatusLabel.BackgroundTransparency = 1
+    StatusLabel.Position = UDim2.new(0.6, 0, 0, 25)
+    StatusLabel.Size = UDim2.new(0.4, -35, 0, 20)
+    StatusLabel.Font = Enum.Font.GothamBold
+    StatusLabel.Text = "ACTIF"
+    StatusLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
+    StatusLabel.TextSize = 12
+    StatusLabel.TextXAlignment = Enum.TextXAlignment.Center
+    StatusLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    CreditsLabel.Name = "CreditsLabel"
+    CreditsLabel.Parent = ContentFrame
+    CreditsLabel.BackgroundTransparency = 1
+    CreditsLabel.Position = UDim2.new(0, 0, 0, 50)
+    CreditsLabel.Size = UDim2.new(1, -35, 0, 18)
+    CreditsLabel.Font = Enum.Font.Gotham
+    CreditsLabel.Text = "Protection automatique contre l'inactivité"
+    CreditsLabel.TextColor3 = Color3.fromRGB(149, 165, 166)
+    CreditsLabel.TextSize = 11
+    CreditsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    CreditsLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+
+    -- Bouton fermer moderne
     CloseButton.Name = "CloseButton"
-    CloseButton.Parent = MainFrame
-    CloseButton.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
-    CloseButton.BackgroundTransparency = 0
-    CloseButton.Position = UDim2.new(0.85, 0, 0.05, 0)
-    CloseButton.Size = UDim2.new(0, 20, 0, 16)
-    CloseButton.Font = Enum.Font.SourceSansBold
+    CloseButton.Parent = MainContainer
+    CloseButton.BackgroundColor3 = Color3.fromRGB(45, 50, 65)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Position = UDim2.new(1, -30, 0, 8)
+    CloseButton.Size = UDim2.new(0, 22, 0, 22)
+    CloseButton.Font = Enum.Font.GothamBold
     CloseButton.Text = "X"
     CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     CloseButton.TextSize = 12
-    CloseButton.TextStrokeTransparency = 0
-    CloseButton.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 
-    local CloseUICorner = Instance.new("UICorner")
-    CloseUICorner.CornerRadius = UDim.new(0, 6)
-    CloseUICorner.Parent = CloseButton
+    CloseCorner.CornerRadius = UDim.new(0, 11)
+    CloseCorner.Parent = CloseButton
+
+
 
     CloseButton.MouseButton1Click:Connect(function()
-        getgenv().ProstoneAntiAfkExecuted = false
-        getgenv().ProstoneTimerActive = false
-        TimerActive = false
-        AntiAFKGui:Destroy()
-        AntiAFKGui = nil
+        local slideOut = TweenService:Create(MainContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {
+            Position = UDim2.new(1, 10, 0.02, 0)
+        })
+        slideOut:Play()
+        slideOut.Completed:Wait()
+
+        if StaffNotificationGui then
+            StaffNotificationGui:Destroy()
+            StaffNotificationGui = nil
+        end
     end)
 
-    TitleLabel.Name = "TitleLabel"
-    TitleLabel.Parent = MainFrame
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Position = UDim2.new(0.05, 0, 0.05, 0)
-    TitleLabel.Size = UDim2.new(0.7, 0, 0.3, 0)
-    TitleLabel.Font = Enum.Font.SourceSansBold
-    TitleLabel.Text = "Prostone - Anti AFK"
-    TitleLabel.TextColor3 = Color3.fromRGB(100, 149, 237)
-    TitleLabel.TextSize = 12
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-    TimerLabel.Name = "TimerLabel"
-    TimerLabel.Parent = MainFrame
-    TimerLabel.BackgroundTransparency = 1
-    TimerLabel.Position = UDim2.new(0.05, 0, 0.35, 0)
-    TimerLabel.Size = UDim2.new(0.45, 0, 0.3, 0)
-    TimerLabel.Font = Enum.Font.SourceSansBold
-    TimerLabel.Text = "0:00:00"
-    TimerLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
-    TimerLabel.TextSize = 11
-    TimerLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-    StatusLabel.Name = "StatusLabel"
-    StatusLabel.Parent = MainFrame
-    StatusLabel.BackgroundTransparency = 1
-    StatusLabel.Position = UDim2.new(0.55, 0, 0.35, 0)
-    StatusLabel.Size = UDim2.new(0.4, 0, 0.3, 0)
-    StatusLabel.Font = Enum.Font.SourceSans
-    StatusLabel.Text = "Actif"
-    StatusLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
-    StatusLabel.TextSize = 10
-    StatusLabel.TextXAlignment = Enum.TextXAlignment.Center
-
-    CreditsLabel.Name = "CreditsLabel"
-    CreditsLabel.Parent = MainFrame
-    CreditsLabel.BackgroundTransparency = 1
-    CreditsLabel.Position = UDim2.new(0.05, 0, 0.7, 0)
-    CreditsLabel.Size = UDim2.new(0.9, 0, 0.25, 0)
-    CreditsLabel.Font = Enum.Font.SourceSans
-    CreditsLabel.Text = "Prostone Hub"
-    CreditsLabel.TextColor3 = Color3.fromRGB(149, 165, 166)
-    CreditsLabel.TextSize = 9
-    CreditsLabel.TextXAlignment = Enum.TextXAlignment.Center
-
+    -- Système de glissement moderne
     local dragging = false
     local dragInput = nil
     local dragStart = nil
@@ -189,17 +235,17 @@ local function CreateAntiAFKInterface()
         local delta = input.Position - dragStart
         local dragTime = 0.04
         local targetPosition = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        
-        local dragTween = TweenService:Create(MainFrame, TweenInfo.new(dragTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = targetPosition})
+
+        local dragTween = TweenService:Create(MainContainer, TweenInfo.new(dragTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = targetPosition})
         dragTween:Play()
     end
 
-    MainFrame.InputBegan:Connect(function(input)
+    MainContainer.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
-            startPos = MainFrame.Position
-            
+            startPos = MainContainer.Position
+
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -208,118 +254,142 @@ local function CreateAntiAFKInterface()
         end
     end)
 
-    MainFrame.InputChanged:Connect(function(input)
+    MainContainer.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
 
     UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging and MainFrame.Size then
+        if input == dragInput and dragging and MainContainer.Size then
             updateDrag(input)
         end
     end)
 
-    MainFrame.BackgroundTransparency = 1
-    for _, child in pairs(MainFrame:GetChildren()) do
-        if child:IsA("TextLabel") or child:IsA("TextButton") then
+    -- Animation d'entrée fluide
+    MainContainer.Position = UDim2.new(-0.5, 0, 0.02, 0)
+    MainContainer.BackgroundTransparency = 1
+    StatusIcon.BackgroundTransparency = 1
+
+    for _, child in pairs(ContentFrame:GetChildren()) do
+        if child:IsA("TextLabel") then
             child.TextTransparency = 1
         end
     end
+    CloseButton.BackgroundTransparency = 1
+    CloseButton.TextTransparency = 1
 
-    local fadeInTween = TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {BackgroundTransparency = 0})
+    -- Animation de glissement vers la droite
+    local slideIn = TweenService:Create(MainContainer, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.02, 0, 0.02, 0)
+    })
+    slideIn:Play()
+
+    -- Animation de fade in
+    local fadeInTween = TweenService:Create(MainContainer, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {BackgroundTransparency = 0})
     fadeInTween:Play()
 
-    for _, child in pairs(MainFrame:GetChildren()) do
-        if child:IsA("TextLabel") or child:IsA("TextButton") then
-            local textTween = TweenService:Create(child, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {TextTransparency = 0})
-            textTween:Play()
+    local iconFade = TweenService:Create(StatusIcon, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0})
+    iconFade:Play()
+
+    local buttonFade = TweenService:Create(CloseButton, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {BackgroundTransparency = 0})
+    buttonFade:Play()
+
+    local buttonTextFade = TweenService:Create(CloseButton, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {TextTransparency = 0})
+    buttonTextFade:Play()
+
+    -- Animation des textes
+    for i, child in pairs(ContentFrame:GetChildren()) do
+        if child:IsA("TextLabel") then
+            task.spawn(function()
+                task.wait(0.1 * i)
+                local textTween = TweenService:Create(child, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {TextTransparency = 0})
+                textTween:Play()
+            end)
         end
     end
 
     TimerActive = true
     getgenv().ProstoneTimerActive = true
-    
+
+    -- Timer amélioré avec effets visuels
     spawn(function()
         while TimerActive and getgenv().ProstoneTimerActive and AntiAFKGui do
             AntiAFKSeconds = AntiAFKSeconds + 1
-            
+
             if AntiAFKSeconds >= 60 then
                 AntiAFKSeconds = 0
                 AntiAFKMinutes = AntiAFKMinutes + 1
             end
-            
+
             if AntiAFKMinutes >= 60 then
                 AntiAFKMinutes = 0
                 AntiAFKHours = AntiAFKHours + 1
             end
-            
-            local timeString = string.format("%d:%02d:%02d", AntiAFKHours, AntiAFKMinutes, AntiAFKSeconds)
+
+            local timeString = string.format("Temps: %d:%02d:%02d", AntiAFKHours, AntiAFKMinutes, AntiAFKSeconds)
             if AntiAFKGui and AntiAFKGui.Parent then
-                TimerLabel.Text = "⏱️ " .. timeString
-                
+                TimerLabel.Text = timeString
+
+                -- Couleurs dynamiques selon le temps
                 if AntiAFKHours > 0 then
-                    TimerLabel.TextColor3 = Color3.fromRGB(241, 196, 15)
+                    TimerLabel.TextColor3 = Color3.fromRGB(255, 215, 0) -- Or pour les heures
+                    StatusIcon.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+                    UIStroke.Color = Color3.fromRGB(255, 215, 0)
                 elseif AntiAFKMinutes > 30 then
-                    TimerLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
+                    TimerLabel.TextColor3 = Color3.fromRGB(46, 204, 113) -- Vert pour 30+ minutes
+                    StatusIcon.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+                    UIStroke.Color = Color3.fromRGB(46, 204, 113)
                 else
-                    TimerLabel.TextColor3 = Color3.fromRGB(52, 152, 219)
+                    TimerLabel.TextColor3 = Color3.fromRGB(255, 255, 255) -- Blanc par défaut
+                    StatusIcon.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+                    UIStroke.Color = Color3.fromRGB(46, 204, 113)
                 end
             end
-            
-            wait(1)
+
+            task.wait(1)
         end
     end)
 
-    spawn(function()
-        while getgenv().ProstoneAntiAfkExecuted and AntiAFKGui do
-            local pulseTween1 = TweenService:Create(StatusLabel, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0.4})
-            local pulseTween2 = TweenService:Create(StatusLabel, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0})
-            
-            pulseTween1:Play()
-            pulseTween1.Completed:Wait()
-            pulseTween2:Play()
-            pulseTween2.Completed:Wait()
-        end
-    end)
+    -- Interface statique sans animations continues pour éviter les conflits
 end
 
 local function ToggleAntiAFK(enabled)
     if enabled then
         CreateAntiAFKInterface()
-        
+
         LocalPlayer.Idled:Connect(function()
             VirtualUser:CaptureController()
             VirtualUser:ClickButton2(Vector2.new())
-            
+
             pcall(function()
                 VirtualUser:Button1Down(Vector2.new(0,0))
-                wait(0.1)
+                task.wait(0.1)
                 VirtualUser:Button1Up(Vector2.new(0,0))
             end)
         end)
-        
+
         AntiAFKConnection = RunService.Heartbeat:Connect(function()
             pcall(function()
                 VirtualUser:CaptureController()
                 VirtualUser:ClickButton2(Vector2.new())
             end)
         end)
-        
+
         spawn(function()
             while AntiAFKEnabled do
                 pcall(function()
                     VirtualUser:CaptureController()
                     VirtualUser:Button1Down(Vector2.new(0,0))
-                    wait(0.1)
+                    task.wait(0.1)
                     VirtualUser:Button1Up(Vector2.new(0,0))
-                    
+
                     VirtualUser:TypeOnKeyboard("")
                 end)
-                wait(45)
+                task.wait(45)
             end
         end)
-        
+
         AntiAFKEnabled = true
         print("Prostone Hub - Anti AFK activé avec succès!")
     else
@@ -327,7 +397,7 @@ local function ToggleAntiAFK(enabled)
             AntiAFKConnection:Disconnect()
             AntiAFKConnection = nil
         end
-        
+
         if AntiAFKGui then
             getgenv().ProstoneAntiAfkExecuted = false
             getgenv().ProstoneTimerActive = false
@@ -335,11 +405,11 @@ local function ToggleAntiAFK(enabled)
             AntiAFKGui:Destroy()
             AntiAFKGui = nil
         end
-        
+
         AntiAFKSeconds = 0
         AntiAFKMinutes = 0
         AntiAFKHours = 0
-        
+
         AntiAFKEnabled = false
         print("Prostone Hub - Anti AFK désactivé")
     end
@@ -363,9 +433,9 @@ local RemovedAccessories = {}
 
 local function RemoveClothing()
     if not LocalPlayer.Character then return end
-    
+
     OriginalClothing = {}
-    
+
     for _, item in pairs(LocalPlayer.Character:GetChildren()) do
         if item:IsA("Shirt") or item:IsA("Pants") or item:IsA("ShirtGraphic") then
             table.insert(OriginalClothing, {
@@ -388,9 +458,9 @@ end
 
 local function RemoveSmallParts()
     if not LocalPlayer.Character then return end
-    
+
     RemovedAccessories = {}
-    
+
     for _, item in pairs(LocalPlayer.Character:GetChildren()) do
         if item:IsA("Accessory") then
             local isHair = false
@@ -403,7 +473,7 @@ local function RemoveSmallParts()
                     end
                 end
             end
-            
+
             if not isHair then
                 table.insert(RemovedAccessories, {
                     item = item:Clone(),
@@ -426,10 +496,10 @@ end
 
 local function ModifyFaceTraits(isEnabled)
     if not LocalPlayer.Character then return end
-    
+
     local head = LocalPlayer.Character:FindFirstChild("Head")
     if not head then return end
-    
+
     if isEnabled then
         for _, item in pairs(head:GetChildren()) do
             if item:IsA("Decal") and item.Name == "face" then
@@ -462,7 +532,7 @@ local function ToggleRainbowEffect(enabled)
         "UpperTorso", "LowerTorso", "LeftUpperLeg", "LeftLowerLeg", "LeftFoot", 
         "RightUpperLeg", "RightLowerLeg", "RightFoot"
     }
-    
+
     for _, partName in pairs(bodyPartNames) do
         local part = LocalPlayer.Character:FindFirstChild(partName)
         if part and part:IsA("BasePart") then
@@ -474,16 +544,16 @@ local function ToggleRainbowEffect(enabled)
         RemoveClothing()
         RemoveSmallParts()
         ModifyFaceTraits(true)
-        
+
         RainbowConnection = RunService.Heartbeat:Connect(function()
             local time = tick()
             local hue = (time * 0.3) % 1
             local saturation = 1
             local value = 0.9 + 0.1 * math.sin(time * 3)
-            
+
             local uniformColor = Color3.fromHSV(hue, saturation, value)
             local uniformTransparency = 0.3 + 0.1 * math.sin(time * 2)
-            
+
             for _, part in pairs(mainBodyParts) do
                 if part and part.Parent then
                     part.Color = uniformColor
@@ -499,11 +569,11 @@ local function ToggleRainbowEffect(enabled)
                 part.Color = Color3.new(1, 1, 1)
             end
         end
-        
+
         RestoreClothing()
         RestoreSmallParts()
         ModifyFaceTraits(false)
-        
+
         IsRainbowEnabled = false
     end
 end
@@ -511,9 +581,32 @@ end
 local RainbowToggle = MainTab:CreateToggle({
     Name = "Effet Multicolore Uniforme + Nu",
     CurrentValue = false,
-    Flag = "RainbowToggle",
+    Flag = "RainbrowToggle",
     Callback = function(Value)
         ToggleRainbowEffect(Value)
+    end,
+})
+
+local FullbrightSection = MainTab:CreateSection("Éclairage")
+
+local FullbrightButton = MainTab:CreateButton({
+    Name = "Fullbright",
+    Callback = function()
+        pcall(function()
+            local Light = game:GetService("Lighting")
+
+            function dofullbright()
+                Light.Ambient = Color3.new(1, 1, 1)
+                Light.ColorShift_Bottom = Color3.new(1, 1, 1)
+                Light.ColorShift_Top = Color3.new(1, 1, 1)
+            end
+
+            dofullbright()
+
+            Light.LightingChanged:Connect(dofullbright)
+
+            print("Prostone Hub - Fullbright activé!")
+        end)
     end,
 })
 
@@ -523,16 +616,16 @@ local TrollScriptsSection = TrollTab:CreateSection("Troll Scripts")
 
 local SpinConnection = nil
 local SpinActive = false
-local SpinSpeed = 100
+local SpinSpeed = 75
 
 local function GetRigType()
     if not LocalPlayer.Character then 
         return "R6"
     end
-    
+
     local upperTorso = LocalPlayer.Character:FindFirstChild("UpperTorso")
     local lowerTorso = LocalPlayer.Character:FindFirstChild("LowerTorso")
-    
+
     if upperTorso and lowerTorso then
         return "R15"
     else
@@ -544,20 +637,20 @@ local function StartSpinTroll()
     if SpinConnection then
         SpinConnection:Disconnect()
     end
-    
+
     if not LocalPlayer.Character then return end
-    
+
     local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then return end
-    
+
     local bodyAngularVelocity = Instance.new("BodyAngularVelocity")
     bodyAngularVelocity.Name = "ProstoneSpinTroll"
     bodyAngularVelocity.AngularVelocity = Vector3.new(0, SpinSpeed, 0)
     bodyAngularVelocity.MaxTorque = Vector3.new(0, math.huge, 0)
     bodyAngularVelocity.Parent = humanoidRootPart
-    
+
     SpinActive = true
-    
+
     SpinConnection = RunService.Heartbeat:Connect(function()
         if humanoidRootPart and humanoidRootPart:FindFirstChild("ProstoneSpinTroll") then
             humanoidRootPart.ProstoneSpinTroll.AngularVelocity = Vector3.new(0, SpinSpeed, 0)
@@ -569,12 +662,12 @@ end
 
 function StopSpinTroll()
     SpinActive = false
-    
+
     if SpinConnection then
         SpinConnection:Disconnect()
         SpinConnection = nil
     end
-    
+
     if LocalPlayer.Character then
         local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         if humanoidRootPart then
@@ -592,24 +685,24 @@ local BrSaleButton = TrollTab:CreateButton({
         pcall(function()
             local rigType = GetRigType()
             print("Prostone Hub - Rig Type détecté: " .. rigType)
-            
+
             if rigType == "R15" then
                 loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
             else
                 loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
             end
-            
+
             print("Prostone Hub - BR Sale activé pour " .. rigType)
         end)
     end,
 })
 
 local SpinSpeedSlider = TrollTab:CreateSlider({
-    Name = "Vitesse de Spin (10-500)",
-    Range = {10, 500},
+    Name = "Vitesse de Spin (10-75)",
+    Range = {10, 75},
     Increment = 10,
     Suffix = " tours/s",
-    CurrentValue = 100,
+    CurrentValue = 75,
     Flag = "SpinSpeedSlider",
     Callback = function(Value)
         SpinSpeed = Value
@@ -643,179 +736,188 @@ local TrollInfo = TrollTab:CreateParagraph({
     Content = "BR Sale détecte automatiquement votre type de rig (R6/R15). Le Spin Troll fait tourner votre personnage à la vitesse sélectionnée."
 })
 
-local ExternalScriptsTab = Window:CreateTab("Scripts Externes", 4483362458)
-
-local PopularScriptsSection = ExternalScriptsTab:CreateSection("Scripts Populaires")
-
-local OrcaButton = ExternalScriptsTab:CreateButton({
-    Name = "Orca Script",
-    Callback = function()
-        pcall(function()
-            loadstring(
-                game:HttpGetAsync("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua")
-            )()
-        end)
-    end,
-})
-
-local InfiniteYieldButton = ExternalScriptsTab:CreateButton({
-    Name = "Infinite Yield",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-        end)
-    end,
-})
-
-local DexButton = ExternalScriptsTab:CreateButton({
-    Name = "DEX Explorer",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/infyiff/backup/main/dex.lua'))()
-        end)
-    end,
-})
-
-local UtilityScriptsSection = ExternalScriptsTab:CreateSection("Scripts Utiles")
-
-local RemoteSpyButton = ExternalScriptsTab:CreateButton({
-    Name = "Remote Spy",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua'))()
-        end)
-    end,
-})
-
-local ServerHopperButton = ExternalScriptsTab:CreateButton({
-    Name = "Server Hopper",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/LeoKholYt/roblox/main/lk_serverhop.lua'))()
-        end)
-    end,
-})
-
-local FPSBoosterButton = ExternalScriptsTab:CreateButton({
-    Name = "FPS Booster",
-    Callback = function()
-        pcall(function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/FPSBooster.lua'))()
-        end)
-    end,
-})
-
-local ScriptsInfoSection = ExternalScriptsTab:CreateSection("Informations")
-
-local ScriptsInfo = ExternalScriptsTab:CreateParagraph({
-    Title = "À propos des Scripts Externes", 
-    Content = "Ces scripts sont des outils populaires de la communauté Roblox. Utilisez-les à vos propres risques. Certains peuvent ne pas fonctionner sur tous les jeux ou exécuteurs."
-})
 
 local SpectateTab = Window:CreateTab("Spectate", 4483362458)
 
 local SpectatingPlayer = nil
 local OriginalCameraSubject = nil
+local OriginalCameraType = nil
 local SpectateConnection = nil
+local SpectateCharacterConnection = nil
+local AutoRefreshEnabled = true
 
 local SpectateSection = SpectateTab:CreateSection("Spectate Options")
 
 local function GetPlayersList()
-    local playersList = {}
+    local playersList = {"Aucun"} -- Ajouter option "Aucun" en premier
     for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            table.insert(playersList, player.Name)
+        if player ~= LocalPlayer and player.Name then
+            -- S'assurer que c'est bien un string valide
+            local playerName = tostring(player.Name)
+            if playerName and playerName ~= "" and playerName ~= "nil" then
+                table.insert(playersList, playerName)
+            end
         end
     end
     return playersList
 end
 
 local function StartSpectating(playerName)
-    if not playerName or playerName == "" then return end
-    
-    local targetPlayer = Players:FindFirstChild(playerName)
-    if not targetPlayer or targetPlayer == LocalPlayer then return end
-    
+    if not playerName or playerName == "" or type(playerName) ~= "string" or playerName == "Aucun" then 
+        print("[DEBUG] Nom de joueur invalide ou 'Aucun' sélectionné: " .. tostring(playerName))
+        StopSpectating()
+        return 
+    end
+
+    local targetPlayer = game.Players:FindFirstChild(playerName)
+    if not targetPlayer then
+        print("[DEBUG] Joueur introuvable: " .. playerName)
+        return
+    end
+
+    if targetPlayer == LocalPlayer then
+        print("[DEBUG] Cannot spectate yourself")
+        return
+    end
+
+    -- Si on spectate déjà ce joueur, ne rien faire
+    if SpectatingPlayer == targetPlayer then
+        print("[DEBUG] Déjà en train de spectate " .. playerName)
+        return
+    end
+
+    print("[DEBUG] Démarrage du spectate pour: " .. playerName)
+
+    -- Arrêter complètement le spectate précédent
     StopSpectating()
-    
+
+    -- Attendre un peu pour éviter les conflits
+    task.wait(0.1)
+
+    -- Sauvegarder les paramètres originaux de la caméra (seulement si pas déjà fait)
     if not OriginalCameraSubject then
-        OriginalCameraSubject = Camera.CameraSubject
+        OriginalCameraSubject = workspace.CurrentCamera.CameraSubject
+        OriginalCameraType = workspace.CurrentCamera.CameraType
+        print("[DEBUG] Caméra originale sauvegardée")
     end
-    
+
     SpectatingPlayer = targetPlayer
-    
-    local function UpdateCamera()
-        pcall(function()
-            if SpectatingPlayer and SpectatingPlayer.Character then
-                local humanoid = SpectatingPlayer.Character:FindFirstChild("Humanoid")
-                if humanoid then
-                    Camera.CameraSubject = humanoid
-                    Camera.CameraType = Enum.CameraType.Custom
-                end
-            end
-        end)
+
+    -- Fonction de mise à jour de la caméra
+    local function UpdateSpectateCamera()
+        if not SpectatingPlayer or not SpectatingPlayer.Parent then
+            print("[DEBUG] Joueur spectateé déconnecté")
+            StopSpectating()
+            return
+        end
+
+        if SpectatingPlayer.Character and SpectatingPlayer.Character:FindFirstChild("Humanoid") then
+            workspace.CurrentCamera.CameraSubject = SpectatingPlayer.Character.Humanoid
+            workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+        end
     end
-    
-    UpdateCamera()
-    
-    SpectateConnection = RunService.Heartbeat:Connect(function()
-        if SpectatingPlayer and SpectatingPlayer.Parent then
-            UpdateCamera()
+
+    -- Première mise à jour
+    UpdateSpectateCamera()
+
+    -- Connexion pour maintenir le spectate (moins fréquente pour éviter les conflits)
+    SpectateConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if SpectatingPlayer and SpectatingPlayer.Parent and SpectatingPlayer.Character then
+            if workspace.CurrentCamera.CameraSubject ~= SpectatingPlayer.Character.Humanoid then
+                UpdateSpectateCamera()
+            end
         else
             StopSpectating()
         end
     end)
-    
+
+    -- Gérer les respawns
     if SpectatingPlayer then
-        SpectatingPlayer.CharacterAdded:Connect(function()
-            wait(1)
-            if SpectatingPlayer then
-                UpdateCamera()
+        SpectateCharacterConnection = SpectatingPlayer.CharacterAdded:Connect(function(character)
+            task.wait(0.3)
+            if SpectatingPlayer then -- Vérifier qu'on spectate toujours ce joueur
+                UpdateSpectateCamera()
             end
         end)
     end
+
+    print("Prostone Hub - Spectate activé pour: " .. playerName)
 end
 
 function StopSpectating()
-    pcall(function()
-        if OriginalCameraSubject then
-            Camera.CameraSubject = OriginalCameraSubject
-        else
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-                Camera.CameraSubject = LocalPlayer.Character.Humanoid
-            end
+    print("[DEBUG] Arrêt du spectate")
+
+    -- Déconnexion de toutes les connexions
+    if SpectateConnection then
+        SpectateConnection:Disconnect()
+        SpectateConnection = nil
+        print("[DEBUG] SpectateConnection déconnectée")
+    end
+
+    if SpectateCharacterConnection then
+        SpectateCharacterConnection:Disconnect()
+        SpectateCharacterConnection = nil
+        print("[DEBUG] SpectateCharacterConnection déconnectée")
+    end
+
+    -- Restauration de la caméra
+    if OriginalCameraSubject and OriginalCameraSubject.Parent then
+        workspace.CurrentCamera.CameraSubject = OriginalCameraSubject
+        print("[DEBUG] Caméra originale restaurée")
+    else
+        -- Fallback: utiliser le joueur local
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
+            print("[DEBUG] Caméra restaurée au joueur local")
         end
-        
-        Camera.CameraType = Enum.CameraType.Custom
-        
-        if SpectateConnection then
-            SpectateConnection:Disconnect()
-            SpectateConnection = nil
-        end
-        
-        SpectatingPlayer = nil
-        OriginalCameraSubject = nil
-    end)
+    end
+
+    -- Restaurer le type de caméra
+    if OriginalCameraType then
+        workspace.CurrentCamera.CameraType = OriginalCameraType
+        print("[DEBUG] Type de caméra original restauré")
+    else
+        workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+    end
+
+    if SpectatingPlayer then
+        print("Prostone Hub - Spectate arrêté pour: " .. SpectatingPlayer.Name)
+    end
+
+    -- Reset des variables
+    SpectatingPlayer = nil
+    OriginalCameraSubject = nil
+    OriginalCameraType = nil
 end
 
-local PlayerDropdown = SpectateTab:CreateDropdown({
-    Name = "Sélectionner un joueur",
-    Options = GetPlayersList(),
-    CurrentOption = "",
-    Flag = "SpectatePlayerDropdown",
-    Callback = function(Option)
-        if Option and Option ~= "" then
-            StartSpectating(Option)
+local SpectatePlayerName = ""
+
+local PlayerInput = SpectateTab:CreateInput({
+    Name = "Pseudo du joueur à spectate",
+    PlaceholderText = "Tapez le nom du joueur...",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        SpectatePlayerName = Text
+    end,
+})
+
+local StartSpectateButton = SpectateTab:CreateButton({
+    Name = "Commencer le Spectate",
+    Callback = function()
+        if SpectatePlayerName and SpectatePlayerName ~= "" then
+            local targetPlayer = game.Players:FindFirstChild(SpectatePlayerName)
+            if targetPlayer and targetPlayer ~= LocalPlayer then
+                StartSpectating(SpectatePlayerName)
+            else
+                print("Prostone Hub - Joueur '" .. SpectatePlayerName .. "' introuvable")
+            end
+        else
+            print("Prostone Hub - Veuillez entrer un nom de joueur")
         end
     end,
 })
 
-local RefreshButton = SpectateTab:CreateButton({
-    Name = "Rafraîchir la liste",
-    Callback = function()
-        PlayerDropdown:Set(GetPlayersList())
-    end,
-})
+-- Plus besoin de rafraîchissement automatique avec le système de saisie manuelle
 
 local StopSpectateButton = SpectateTab:CreateButton({
     Name = "Arrêter le Spectate",
@@ -826,7 +928,7 @@ local StopSpectateButton = SpectateTab:CreateButton({
 
 local SpectateInfo = SpectateTab:CreateParagraph({
     Title = "Informations", 
-    Content = "Sélectionnez un joueur pour commencer à le spectate. La caméra suivra automatiquement le joueur sélectionné, même s'il respawn."
+    Content = "Tapez le nom exact du joueur que vous voulez spectate et cliquez sur 'Commencer le Spectate'. La caméra suivra automatiquement le joueur, même s'il respawn."
 })
 
 local ESPTab = Window:CreateTab("ESP", 4483362458)
@@ -841,82 +943,239 @@ local StaffNotificationGui = nil
 local ESPSection = ESPTab:CreateSection("ESP Options")
 
 local function CreateStaffNotification(staffPlayerName)
-    if StaffNotificationGui then
-        StaffNotificationGui:Destroy()
-    end
-    
-    StaffNotificationGui = Instance.new("ScreenGui")
-    local NotificationFrame = Instance.new("Frame")
+    local StaffNotificationGui = Instance.new("ScreenGui")
+    local MainContainer = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
+    local UIStroke = Instance.new("UIStroke")
+    local AlertIcon = Instance.new("Frame")
+    local IconCorner = Instance.new("UICorner")
+    local IconLabel = Instance.new("TextLabel")
+    local ContentFrame = Instance.new("Frame")
     local TitleLabel = Instance.new("TextLabel")
     local StaffLabel = Instance.new("TextLabel")
-    
-    StaffNotificationGui.Name = "StaffNotification"
+    local CloseButton = Instance.new("TextButton")
+    local CloseCorner = Instance.new("UICorner")
+    local LocalizeButton = Instance.new("TextButton")
+    local LocalizeCorner = Instance.new("UICorner")
+
+    StaffNotificationGui.Name = "ProStoneStaffAlert"
     StaffNotificationGui.Parent = game.CoreGui
     StaffNotificationGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    StaffNotificationGui.ResetOnSpawn = false
+
+    -- Container principal
+    MainContainer.Name = "MainContainer"
+    MainContainer.Parent = StaffNotificationGui
+    MainContainer.BackgroundColor3 = Color3.fromRGB(25, 30, 45)
+    MainContainer.BorderSizePixel = 0
     
-    NotificationFrame.Name = "NotificationFrame"
-    NotificationFrame.Parent = StaffNotificationGui
-    NotificationFrame.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
-    NotificationFrame.BorderSizePixel = 0
-    NotificationFrame.Position = UDim2.new(0.02, 0, 0.9, 0)
-    NotificationFrame.Size = UDim2.new(0, 250, 0, 60)
-    
-    UICorner.CornerRadius = UDim.new(0, 8)
-    UICorner.Parent = NotificationFrame
-    
-    TitleLabel.Name = "TitleLabel"
-    TitleLabel.Parent = NotificationFrame
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Position = UDim2.new(0.05, 0, 0.1, 0)
-    TitleLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
-    TitleLabel.Font = Enum.Font.SourceSansBold
-    TitleLabel.Text = "🚨 STAFF DETECTE 🚨"
-    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TitleLabel.TextSize = 14
-    TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
-    
-    StaffLabel.Name = "StaffLabel"
-    StaffLabel.Parent = NotificationFrame
-    StaffLabel.BackgroundTransparency = 1
-    StaffLabel.Position = UDim2.new(0.05, 0, 0.5, 0)
-    StaffLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
-    StaffLabel.Font = Enum.Font.SourceSansBold
-    StaffLabel.Text = staffPlayerName
-    StaffLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    StaffLabel.TextSize = 12
-    StaffLabel.TextXAlignment = Enum.TextXAlignment.Center
-    
-    NotificationFrame.Position = UDim2.new(0.02, 0, 1.1, 0)
-    local slideIn = TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0.02, 0, 0.85, 0)})
-    slideIn:Play()
-    
-    wait(5)
-    
-    local slideOut = TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Position = UDim2.new(-0.3, 0, 0.85, 0)})
-    slideOut:Play()
-    slideOut.Completed:Wait()
-    
-    if StaffNotificationGui then
-        StaffNotificationGui:Destroy()
-        StaffNotificationGui = nil
+    -- Calculer la position en fonction du nombre de notifications existantes
+    local notificationCount = 0
+    for _, _ in pairs(StaffNotifications) do
+        notificationCount = notificationCount + 1
     end
+    
+    MainContainer.Position = UDim2.new(1, 10, 0.02 + (notificationCount * 0.12), 0)
+    MainContainer.Size = UDim2.new(0, 360, 0, 80)
+
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = MainContainer
+
+    UIStroke.Color = Color3.fromRGB(220, 53, 69)
+    UIStroke.Thickness = 2
+    UIStroke.Parent = MainContainer
+
+    -- Icône d'alerte
+    AlertIcon.Name = "AlertIcon"
+    AlertIcon.Parent = MainContainer
+    AlertIcon.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+    AlertIcon.BorderSizePixel = 0
+    AlertIcon.Position = UDim2.new(0, 15, 0.5, -18)
+    AlertIcon.Size = UDim2.new(0, 36, 0, 36)
+
+    IconCorner.CornerRadius = UDim.new(0, 18)
+    IconCorner.Parent = AlertIcon
+
+    IconLabel.Name = "IconLabel"
+    IconLabel.Parent = AlertIcon
+    IconLabel.BackgroundTransparency = 1
+    IconLabel.Size = UDim2.new(1, 0, 1, 0)
+    IconLabel.Font = Enum.Font.GothamBold
+    IconLabel.Text = "!"
+    IconLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    IconLabel.TextScaled = true
+    IconLabel.TextStrokeTransparency = 0.5
+    IconLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+
+    -- Contenu texte
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Parent = MainContainer
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Position = UDim2.new(0, 65, 0, 8)
+    ContentFrame.Size = UDim2.new(0, 200, 0, 64)
+
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Parent = ContentFrame
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+    TitleLabel.Size = UDim2.new(1, -30, 0, 22)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.Text = "STAFF DETECTE"
+    TitleLabel.TextColor3 = Color3.fromRGB(220, 53, 69)
+    TitleLabel.TextSize = 16
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    StaffLabel.Name = "StaffLabel"
+    StaffLabel.Parent = ContentFrame
+    StaffLabel.BackgroundTransparency = 1
+    StaffLabel.Position = UDim2.new(0, 0, 0, 25)
+    StaffLabel.Size = UDim2.new(1, -30, 0, 18)
+    StaffLabel.Font = Enum.Font.Gotham
+    StaffLabel.Text = "Joueur: " .. staffPlayerName
+    StaffLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    StaffLabel.TextSize = 12
+    StaffLabel.TextXAlignment = Enum.TextXAlignment.Left
+    StaffLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+    -- Bouton fermer
+    CloseButton.Name = "CloseButton"
+    CloseButton.Parent = MainContainer
+    CloseButton.BackgroundColor3 = Color3.fromRGB(45, 50, 65)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Position = UDim2.new(1, -30, 0, 8)
+    CloseButton.Size = UDim2.new(0, 22, 0, 22)
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 12
+
+    CloseCorner.CornerRadius = UDim.new(0, 11)
+    CloseCorner.Parent = CloseButton
+
+    -- Animation d'entrée
+    local slideIn = TweenService:Create(MainContainer, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UDim2.new(1, -330, 0.02, 0)
+    })
+    slideIn:Play()
+
+    -- Fonction de fermeture
+    local function CloseNotification()
+        local slideOut = TweenService:Create(MainContainer, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut), {
+            Position = UDim2.new(1, 10, MainContainer.Position.Y.Scale, 0)
+        })
+        slideOut:Play()
+        slideOut.Completed:Wait()
+
+        if StaffNotifications[staffPlayerName] then
+            StaffNotifications[staffPlayerName] = nil
+        end
+        
+        if StaffNotificationGui then
+            StaffNotificationGui:Destroy()
+        end
+    end
+
+    CloseButton.MouseButton1Click:Connect(CloseNotification)
+
+    -- Fermeture automatique après 8 secondes
+    task.spawn(function()
+        task.wait(8)
+        if StaffNotifications[staffPlayerName] then
+            CloseNotification()
+        end
+    end)
+    
+    return StaffNotificationGui
 end
 
-local function CheckForStaff()
-    if not StaffDetectionEnabled then return end
+local AutoQuitEnabled = false
+local StaffCheckConnection = nil
+
+-- Fonction de vérification périodique des staffs
+local function StartStaffMonitoring()
+    if StaffCheckConnection then
+        StaffCheckConnection:Disconnect()
+    end
     
+    StaffCheckConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if StaffDetectionEnabled then
+            -- Vérifier les staffs toutes les 2 secondes environ
+            local currentTime = tick()
+            if not lastStaffCheck or currentTime - lastStaffCheck >= 2 then
+                CheckForStaff()
+                lastStaffCheck = currentTime
+            end
+        end
+    end)
+end
+
+local lastStaffCheck = 0
+
+local StaffNotifications = {}
+
+local function CheckForStaff(silent)
+    if not StaffDetectionEnabled and not silent then return end
+
+    local staffDetected = {}
+    local currentStaffs = {}
+
+    -- Identifier tous les staffs actuels
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= LocalPlayer and player.Team then
             local teamName = player.Team.Name:lower()
             if teamName:find("staff") or teamName:find("admin") or teamName:find("moderator") or teamName:find("mod") then
-                spawn(function()
-                    CreateStaffNotification(player.Name)
-                end)
-                print("Prostone Hub - Staff détecté: " .. player.Name .. " (Team: " .. player.Team.Name .. ")")
+                table.insert(staffDetected, {name = player.Name, team = player.Team.Name})
+                currentStaffs[player.Name] = true
             end
         end
     end
+
+    -- Fermer les notifications des staffs qui ont quitté
+    for staffName, notification in pairs(StaffNotifications) do
+        if not currentStaffs[staffName] then
+            if notification and notification.Parent then
+                notification:Destroy()
+            end
+            StaffNotifications[staffName] = nil
+            print("Prostone Hub - Staff déconnecté: " .. staffName)
+        end
+    end
+
+    -- Créer des notifications pour les nouveaux staffs
+    for _, staff in ipairs(staffDetected) do
+        if not silent then
+            print("Prostone Hub - Staff détecté: " .. staff.name .. " (Team: " .. staff.team .. ")")
+
+            -- Créer une notification uniquement si elle n'existe pas déjà
+            if not StaffNotifications[staff.name] then
+                task.spawn(function()
+                    local notification = CreateStaffNotification(staff.name)
+                    StaffNotifications[staff.name] = notification
+                end)
+            end
+        end
+    end
+
+    -- Auto-quit si activé et qu'il y a des staffs
+    if not silent and #staffDetected > 0 and AutoQuitEnabled then
+        print("Prostone Hub - Auto-quit activé! " .. #staffDetected .. " staff(s) détecté(s). Déconnexion du serveur...")
+        
+        -- Créer une notification d'avertissement
+        Rayfield:Notify({
+            Title = "AUTO-QUIT ACTIVÉ",
+            Content = "Staff détecté! Déconnexion en cours...",
+            Duration = 3,
+            Image = 4483362458,
+        })
+        
+        task.wait(2) -- Laisser le temps de voir les notifications
+        
+        -- Kick du serveur avec message personnalisé
+        LocalPlayer:Kick("🚫 PROSTONE HUB - AUTO PROTECTION 🚫\n\n⚠️ Un staff a été détecté dans la partie ⚠️\n\nVous avez été automatiquement déconnecté pour votre sécurité.\n\n🔒 Protection anti-staff activée\n💙 Prostone Hub - discord.gg/RyQFfVrbWR")
+    end
+
+    return staffDetected
 end
 
 local function CreateESP(player)
@@ -928,54 +1187,107 @@ local function CreateESP(player)
     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then return end
 
+    -- Billboard épuré sans fond
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "ESP_" .. player.Name
     billboard.Adornee = humanoidRootPart
-    billboard.Size = UDim2.new(0, 200, 0, 50)
-    billboard.StudsOffset = Vector3.new(0, 2, 0)
+    billboard.Size = UDim2.new(0, 200, 0, 60)
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
     billboard.AlwaysOnTop = true
+    billboard.ZIndexBehavior = Enum.ZIndexBehavior.Global
     billboard.Parent = humanoidRootPart
 
+    -- Label de nom stylé
     local nameLabel = Instance.new("TextLabel")
     nameLabel.Name = "NameLabel"
-    nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
+    nameLabel.Size = UDim2.new(1, 0, 0.4, 0)
     nameLabel.Position = UDim2.new(0, 0, 0, 0)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Text = player.Name
-    nameLabel.TextColor3 = Color3.new(1, 1, 1)
-    nameLabel.TextStrokeTransparency = 0
-    nameLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    nameLabel.TextScaled = true
-    nameLabel.Font = Enum.Font.SourceSansBold
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.TextStrokeTransparency = 0.2
+    nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    nameLabel.TextScaled = false
+    nameLabel.TextSize = 14
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextWrapped = true
+    nameLabel.ZIndex = 10
     nameLabel.Parent = billboard
 
+    -- Label d'équipe stylé
     local teamLabel = Instance.new("TextLabel")
     teamLabel.Name = "TeamLabel"
-    teamLabel.Size = UDim2.new(1, 0, 0.5, 0)
-    teamLabel.Position = UDim2.new(0, 0, 0.5, 0)
+    teamLabel.Size = UDim2.new(1, 0, 0.3, 0)
+    teamLabel.Position = UDim2.new(0, 0, 0.35, 0)
     teamLabel.BackgroundTransparency = 1
-    teamLabel.Text = player.Team and player.Team.Name or "No Team"
-    teamLabel.TextColor3 = Color3.new(1, 1, 1)
-    teamLabel.TextStrokeTransparency = 0
-    teamLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    teamLabel.TextScaled = true
-    teamLabel.Font = Enum.Font.SourceSans
+    teamLabel.Text = (player.Team and player.Team.Name or "No Team")
+    teamLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    teamLabel.TextStrokeTransparency = 0.3
+    teamLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    teamLabel.TextScaled = false
+    teamLabel.TextSize = 12
+    teamLabel.Font = Enum.Font.Gotham
+    teamLabel.TextWrapped = true
+    teamLabel.ZIndex = 10
     teamLabel.Parent = billboard
 
+    -- Label de distance stylé
+    local distanceLabel = Instance.new("TextLabel")
+    distanceLabel.Name = "DistanceLabel"
+    distanceLabel.Size = UDim2.new(1, 0, 0.25, 0)
+    distanceLabel.Position = UDim2.new(0, 0, 0.7, 0)
+    distanceLabel.BackgroundTransparency = 1
+    distanceLabel.Text = "--- m"
+    distanceLabel.TextColor3 = Color3.fromRGB(150, 255, 150)
+    distanceLabel.TextStrokeTransparency = 0.3
+    distanceLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    distanceLabel.TextScaled = false
+    distanceLabel.TextSize = 10
+    distanceLabel.Font = Enum.Font.Gotham
+    distanceLabel.TextWrapped = true
+    distanceLabel.ZIndex = 10
+    distanceLabel.Parent = billboard
+
+    -- Highlight stylé avec contour d'équipe
     local highlight = nil
     pcall(function()
         highlight = Instance.new("Highlight")
         highlight.Name = "ESP_Highlight"
         highlight.Adornee = character
-        highlight.FillTransparency = 0.5
-        highlight.OutlineTransparency = 0
+        highlight.FillTransparency = 0.9
+        highlight.OutlineTransparency = 0.1
+        highlight.FillColor3 = Color3.fromRGB(100, 149, 237)
+        highlight.OutlineColor3 = Color3.fromRGB(255, 255, 255)
         highlight.Parent = character
+    end)
+
+    -- Mise à jour de la distance en temps réel
+    task.spawn(function()
+        while ESPObjects[player] and billboard and billboard.Parent do
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and 
+               player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local distance = (LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                local distanceText = string.format("%.1f m", distance)
+                distanceLabel.Text = distanceText
+
+                -- Changer la couleur selon la distance
+                if distance < 50 then
+                    distanceLabel.TextColor3 = Color3.fromRGB(255, 100, 100) -- Rouge pour proche
+                elseif distance < 100 then
+                    distanceLabel.TextColor3 = Color3.fromRGB(255, 255, 100) -- Jaune pour moyen
+                else
+                    distanceLabel.TextColor3 = Color3.fromRGB(150, 255, 150) -- Vert pour loin
+                end
+            end
+            task.wait(0.5) -- Mise à jour toutes les 0.5 secondes
+        end
     end)
 
     ESPObjects[player] = {
         billboard = billboard,
         nameLabel = nameLabel,
         teamLabel = teamLabel,
+        distanceLabel = distanceLabel,
         highlight = highlight
     }
 
@@ -986,38 +1298,56 @@ function UpdateESP(player)
     local espObject = ESPObjects[player]
     if not espObject then return end
 
-    local teamColor = Color3.new(1, 1, 1)
+    local teamColor = Color3.fromRGB(100, 149, 237) -- Couleur par défaut plus esthétique
+    local brightTeamColor = Color3.fromRGB(255, 255, 255)
+    local contourColor = Color3.fromRGB(255, 255, 255) -- Couleur de contour par défaut
+
     if player.Team and player.Team.TeamColor then
         teamColor = player.Team.TeamColor.Color
+        -- Rendre la couleur plus vive pour l'affichage
+        local h, s, v = Color3.toHSV(teamColor)
+        brightTeamColor = Color3.fromHSV(h, s, math.min(v + 0.3, 1))
+        -- Utiliser la couleur d'équipe pour le contour avec plus de saturation
+        contourColor = Color3.fromHSV(h, math.min(s + 0.2, 1), math.min(v + 0.4, 1))
     end
 
     if TeamCheckEnabled then
-        espObject.nameLabel.TextColor3 = teamColor
+        -- Mise à jour des couleurs avec les couleurs d'équipe
+        espObject.nameLabel.TextColor3 = brightTeamColor
         espObject.teamLabel.TextColor3 = teamColor
+
         if espObject.highlight then
             pcall(function()
                 espObject.highlight.FillColor3 = teamColor
-                espObject.highlight.OutlineColor3 = teamColor
+                espObject.highlight.OutlineColor3 = contourColor -- Contour avec couleur d'équipe
+                espObject.highlight.FillTransparency = 0.9
+                espObject.highlight.OutlineTransparency = 0.1 -- Contour bien visible
                 espObject.highlight.Enabled = true
             end)
         end
-        espObject.teamLabel.Text = player.Team and player.Team.Name or "No Team"
+        espObject.teamLabel.Text = (player.Team and player.Team.Name or "No Team")
         espObject.teamLabel.Visible = true
     else
-        espObject.nameLabel.TextColor3 = Color3.new(1, 1, 1)
-        espObject.teamLabel.TextColor3 = Color3.new(1, 1, 1)
+        -- Couleurs par défaut élégantes
+        espObject.nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        espObject.teamLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+
         if espObject.highlight then
             pcall(function()
-                espObject.highlight.FillColor3 = Color3.new(1, 1, 1)
-                espObject.highlight.OutlineColor3 = Color3.new(1, 1, 1)
+                espObject.highlight.FillColor3 = Color3.fromRGB(100, 149, 237)
+                espObject.highlight.OutlineColor3 = Color3.fromRGB(255, 255, 255)
+                espObject.highlight.FillTransparency = 0.9
+                espObject.highlight.OutlineTransparency = 0.3
                 espObject.highlight.Enabled = NamesEnabled
             end)
         end
         espObject.teamLabel.Visible = false
     end
 
+    -- Visibilité des éléments
     espObject.nameLabel.Visible = NamesEnabled
-    
+    espObject.billboard.Enabled = NamesEnabled or TeamCheckEnabled
+
     if espObject.highlight then
         espObject.highlight.Enabled = NamesEnabled or TeamCheckEnabled
     end
@@ -1070,6 +1400,8 @@ local TeamCheckToggle = ESPTab:CreateToggle({
     end,
 })
 
+local StaffDetectSection = ESPTab:CreateSection("Staff Detect")
+
 local StaffDetectionToggle = ESPTab:CreateToggle({
     Name = "Détection Staff",
     CurrentValue = false,
@@ -1079,10 +1411,195 @@ local StaffDetectionToggle = ESPTab:CreateToggle({
         if Value then
             CheckForStaff()
         else
-            if StaffNotificationGui then
-                StaffNotificationGui:Destroy()
-                StaffNotificationGui = nil
+            -- Fermer toutes les notifications de staff
+            for staffName, notification in pairs(StaffNotifications) do
+                if notification and notification.Parent then
+                    notification:Destroy()
+                end
             end
+            StaffNotifications = {}
+        end
+    end,
+})
+
+local AutoQuitToggle = ESPTab:CreateToggle({
+    Name = "Auto-Quit si Staff détecté",
+    CurrentValue = false,
+    Flag = "AutoQuitToggle",
+    Callback = function(Value)
+        AutoQuitEnabled = Value
+        if Value then
+            print("Prostone Hub - Auto-quit activé! Le jeu se fermera si un staff est détecté.")
+        else
+            print("Prostone Hub - Auto-quit désactivé.")
+        end
+    end,
+})
+
+local CheckStaffButton = ESPTab:CreateButton({
+    Name = "Vérifier les Staffs maintenant",
+    Callback = function()
+        local staffList = CheckForStaff(true) -- Mode silencieux
+
+        if #staffList > 0 then
+            local message = "STAFFS DÉTECTÉS:\n"
+            for _, staff in ipairs(staffList) do
+                message = message .. "- " .. staff.name .. " (" .. staff.team .. ")\n"
+            end
+            print(message)
+
+            -- Créer une notification spéciale pour le check manuel
+            Rayfield:Notify({
+                Title = "Staff Détectés",
+                Content = #staffList .. " staff(s) trouvé(s) dans la partie!",
+                Duration = 5,
+                Image = 4483362458,
+            })
+        else
+            print("Prostone Hub - Aucun staff détecté dans la partie.")
+            Rayfield:Notify({
+                Title = "Vérification Staff",
+                Content = "Aucun staff détecté dans la partie.",
+                Duration = 3,
+                Image = 4483362458,
+            })
+        end
+    end,
+})
+
+local VisualizeStaffButton = ESPTab:CreateButton({
+    Name = "Localiser Staff visuellement",
+    Callback = function()
+        -- Fonction pour créer un marqueur visuel sur le staff
+        local function CreateStaffMarker(staffPlayer)
+            if not staffPlayer or not staffPlayer.Character or not staffPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                return
+            end
+
+            local character = staffPlayer.Character
+            local humanoidRootPart = character.HumanoidRootPart
+
+            -- Créer un gros highlight rouge clignotant
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "StaffMarker"
+            highlight.Adornee = character
+            highlight.FillColor3 = Color3.fromRGB(255, 0, 0)
+            highlight.OutlineColor3 = Color3.fromRGB(255, 255, 0)
+            highlight.FillTransparency = 0.3
+            highlight.OutlineTransparency = 0
+            highlight.Parent = character
+
+            -- Créer une grosse sphère rouge au-dessus du staff
+            local sphere = Instance.new("Part")
+            sphere.Name = "StaffMarkerSphere"
+            sphere.Shape = Enum.PartType.Ball
+            sphere.Material = Enum.Material.Neon
+            sphere.Size = Vector3.new(8, 8, 8)
+            sphere.Color = Color3.fromRGB(255, 0, 0)
+            sphere.Anchored = true
+            sphere.CanCollide = false
+            sphere.Position = humanoidRootPart.Position + Vector3.new(0, 15, 0)
+            sphere.Parent = workspace
+
+            -- Créer un GUI au-dessus du staff
+            local billboard = Instance.new("BillboardGui")
+            billboard.Name = "StaffMarkerGUI"
+            billboard.Adornee = humanoidRootPart
+            billboard.Size = UDim2.new(0, 400, 0, 100)
+            billboard.StudsOffset = Vector3.new(0, 8, 0)
+            billboard.AlwaysOnTop = true
+            billboard.Parent = humanoidRootPart
+
+            local warningLabel = Instance.new("TextLabel")
+            warningLabel.Size = UDim2.new(1, 0, 1, 0)
+            warningLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+            warningLabel.BackgroundTransparency = 0.2
+            warningLabel.BorderSizePixel = 3
+            warningLabel.BorderColor3 = Color3.fromRGB(255, 255, 0)
+            warningLabel.Text = "⚠️ STAFF DÉTECTÉ ⚠️\n" .. staffPlayer.Name
+            warningLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            warningLabel.TextStrokeTransparency = 0
+            warningLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            warningLabel.TextScaled = true
+            warningLabel.Font = Enum.Font.GothamBold
+            warningLabel.Parent = billboard
+
+            -- Animation de clignotement
+            local blinkConnection
+            blinkConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                local time = tick()
+                local alpha = (math.sin(time * 10) + 1) / 2 -- Valeur entre 0 et 1
+                
+                if highlight and highlight.Parent then
+                    highlight.FillTransparency = 0.1 + (alpha * 0.4)
+                    highlight.OutlineTransparency = alpha * 0.3
+                end
+                
+                if sphere and sphere.Parent then
+                    sphere.Transparency = alpha * 0.5
+                    sphere.Position = humanoidRootPart.Position + Vector3.new(0, 15 + math.sin(time * 5) * 3, 0)
+                end
+                
+                if warningLabel and warningLabel.Parent then
+                    warningLabel.BackgroundTransparency = 0.1 + (alpha * 0.4)
+                end
+            end)
+
+            -- Supprimer les marqueurs après 3 secondes
+            task.spawn(function()
+                task.wait(3)
+                
+                if blinkConnection then
+                    blinkConnection:Disconnect()
+                end
+                
+                if highlight and highlight.Parent then
+                    highlight:Destroy()
+                end
+                
+                if sphere and sphere.Parent then
+                    sphere:Destroy()
+                end
+                
+                if billboard and billboard.Parent then
+                    billboard:Destroy()
+                end
+            end)
+
+            print("Prostone Hub - Marqueur visuel créé sur le staff: " .. staffPlayer.Name)
+        end
+        
+        -- Chercher tous les staffs actuellement connectés
+        local staffFound = false
+        
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if player ~= game.Players.LocalPlayer and player.Team then
+                local teamName = player.Team.Name:lower()
+                if teamName:find("staff") or teamName:find("admin") or teamName:find("moderator") or teamName:find("mod") then
+                    if player.Character then
+                        CreateStaffMarker(player)
+                        staffFound = true
+                        print("Prostone Hub - Marqueur créé sur le staff: " .. player.Name)
+                    end
+                end
+            end
+        end
+        
+        if staffFound then
+            Rayfield:Notify({
+                Title = "Marqueurs Staff",
+                Content = "Marqueurs visuels créés sur les staffs présents!",
+                Duration = 3,
+                Image = 4483362458,
+            })
+        else
+            print("Prostone Hub - Aucun staff détecté ou staff déconnecté")
+            Rayfield:Notify({
+                Title = "Localisation Staff",
+                Content = "Aucun staff détecté dans la partie.",
+                Duration = 3,
+                Image = 4483362458,
+            })
         end
     end,
 })
@@ -1105,6 +1622,195 @@ local WarningParagraph = AntiCheatTab:CreateParagraph({
     Content = "Ce script ne fonctionne pas avec Xeno, JJSploit et Solara."
 })
 
+-- ONGLET SCRIPTS EXTERNES - DEPLACE A LA FIN
+local TargetTab = Window:CreateTab("Target", 4483362458)
+
+local TargetSection = TargetTab:CreateSection("Target Options")
+
+local TargetedPlayer = nil
+local TargetColleActive = false
+local TargetColleConnection = nil
+
+local function GetTargetPlayersList()
+    local playersList = {"Aucun"}
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Name then
+            local playerName = tostring(player.Name)
+            if playerName and playerName ~= "" and playerName ~= "nil" then
+                table.insert(playersList, playerName)
+            end
+        end
+    end
+    return playersList
+end
+
+local function TeleportBehindTarget()
+    if not TargetedPlayer or not TargetedPlayer.Parent then
+        return false
+    end
+
+    if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        return false
+    end
+
+    if not TargetedPlayer.Character or not TargetedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        return false
+    end
+
+    local targetHRP = TargetedPlayer.Character.HumanoidRootPart
+    local myHRP = LocalPlayer.Character.HumanoidRootPart
+
+    -- Calculer la position derrière le joueur ciblé
+    local targetCFrame = targetHRP.CFrame
+    local behindPosition = targetCFrame * CFrame.new(0, 0, 2) -- 2 studs derrière
+
+    -- Téléporter le joueur
+    myHRP.CFrame = behindPosition
+
+    return true
+end
+
+local function StartTargetColle()
+    if not TargetedPlayer then
+        print("Prostone Hub - Aucun joueur ciblé")
+        return
+    end
+
+    if TargetColleConnection then
+        TargetColleConnection:Disconnect()
+    end
+
+    TargetColleActive = true
+    print("Prostone Hub - Target Collé activé pour: " .. TargetedPlayer.Name)
+
+    TargetColleConnection = RunService.Heartbeat:Connect(function()
+        if TargetColleActive and TargetedPlayer then
+            local success = TeleportBehindTarget()
+            if not success then
+                -- Si la téléportation échoue, arrêter le target collé
+                StopTargetColle()
+            end
+        else
+            StopTargetColle()
+        end
+    end)
+end
+
+local function StopTargetColle()
+    TargetColleActive = false
+
+    if TargetColleConnection then
+        TargetColleConnection:Disconnect()
+        TargetColleConnection = nil
+    end
+
+    if TargetedPlayer then
+        print("Prostone Hub - Target Collé désactivé pour: " .. TargetedPlayer.Name)
+    else
+        print("Prostone Hub - Target Collé désactivé")
+    end
+end
+
+local TargetPlayerName = ""
+
+local TargetInput = TargetTab:CreateInput({
+    Name = "Pseudo du joueur à cibler",
+    PlaceholderText = "Tapez le nom du joueur...",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        TargetPlayerName = Text
+        if Text and Text ~= "" then
+            local targetPlayer = game.Players:FindFirstChild(Text)
+            if targetPlayer and targetPlayer ~= LocalPlayer then
+                TargetedPlayer = targetPlayer
+                print("Prostone Hub - Joueur ciblé: " .. Text)
+            else
+                TargetedPlayer = nil
+                print("Prostone Hub - Joueur '" .. Text .. "' introuvable")
+            end
+        else
+            TargetedPlayer = nil
+        end
+    end,
+})
+
+local TargetColleToggle = TargetTab:CreateToggle({
+    Name = "Target Collé (Auto TP)",
+    CurrentValue = false,
+    Flag = "TargetColleToggle",
+    Callback = function(Value)
+        if Value then
+            if TargetPlayerName and TargetPlayerName ~= "" then
+                -- Vérifier à nouveau si le joueur existe au moment du clic
+                local targetPlayer = game.Players:FindFirstChild(TargetPlayerName)
+                if targetPlayer and targetPlayer ~= LocalPlayer then
+                    TargetedPlayer = targetPlayer
+                    StartTargetColle()
+                else
+                    print("Prostone Hub - Joueur '" .. TargetPlayerName .. "' introuvable ou déconnecté")
+                    -- Désactiver le toggle si le joueur n'existe pas
+                    TargetColleToggle:Set(false)
+                end
+            else
+                print("Prostone Hub - Veuillez entrer un nom de joueur")
+                -- Désactiver le toggle si aucun nom n'est entré
+                TargetColleToggle:Set(false)
+            end
+        else
+            StopTargetColle()
+        end
+    end,
+})
+
+local TargetInfo = TargetTab:CreateParagraph({
+    Title = "Informations Target", 
+    Content = "Tapez le nom exact du joueur et activez 'Target Collé' pour vous téléporter automatiquement derrière lui en continu. Désactivez le toggle pour arrêter la téléportation."
+})
+
+-- Plus besoin de rafraîchissement automatique avec le système de saisie manuelle
+
+local ExternalScriptsTab = Window:CreateTab("Scripts Externes", 4483362458)
+
+local PopularScriptsSection = ExternalScriptsTab:CreateSection("Scripts Populaires")
+
+local OrcaButton = ExternalScriptsTab:CreateButton({
+    Name = "Orca Script",
+    Callback = function()
+        pcall(function()
+            loadstring(
+                game:HttpGetAsync("https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua")
+            )()
+        end)
+    end,
+})
+
+local InfiniteYieldButton = ExternalScriptsTab:CreateButton({
+    Name = "Infinite Yield",
+    Callback = function()
+        pcall(function()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+        end)
+    end,
+})
+
+local DexButton = ExternalScriptsTab:CreateButton({
+    Name = "DEX Explorer",
+    Callback = function()
+        pcall(function()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/infyiff/backup/main/dex.lua'))()
+        end)
+    end,
+})
+
+
+
+local ScriptsInfoSection = ExternalScriptsTab:CreateSection("Informations")
+
+local ScriptsInfo = ExternalScriptsTab:CreateParagraph({
+    Title = "À propos des Scripts Externes", 
+    Content = "Ces scripts sont des outils populaires de la communauté Roblox. Utilisez-les à vos propres risques. Certains peuvent ne pas fonctionner sur tous les jeux ou exécuteurs."
+})
+
 local isUIVisible = true
 local RayfieldKeybind = Enum.KeyCode.G
 
@@ -1116,7 +1822,7 @@ end)
 
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
-    
+
     if input.KeyCode == RayfieldKeybind then
         pcall(function()
             if Rayfield then
@@ -1135,7 +1841,7 @@ end)
 
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function()
-        wait(1)
+        task.wait(1)
         if NamesEnabled or TeamCheckEnabled then
             CreateESP(player)
         end
@@ -1150,31 +1856,39 @@ end)
 
 Players.PlayerRemoving:Connect(function(player)
     RemoveESP(player)
-    
+
     if SpectatingPlayer == player then
         StopSpectating()
     end
-    
-    pcall(function()
-        PlayerDropdown:Set(GetPlayersList())
-    end)
+
+    if TargetedPlayer == player then
+        StopTargetColle()
+        TargetedPlayer = nil
+        print("Prostone Hub - Joueur ciblé déconnecté")
+        -- Désactiver le toggle
+        if TargetColleToggle then
+            TargetColleToggle:Set(false)
+        end
+    end
+
+    -- Plus besoin de mettre à jour les dropdowns
 end)
 
 LocalPlayer.CharacterAdded:Connect(function()
-    wait(1)
+    task.wait(1)
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
         LocalPlayer.Character.Humanoid.WalkSpeed = WalkSpeedSlider.CurrentValue
     end
-    
+
     if IsRainbowEnabled then
-        wait(0.5)
+        task.wait(0.5)
         ToggleRainbowEffect(true)
     end
-    
+
     if SpinActive then
         StopSpinTroll()
     end
-    
+
     if not SpectatingPlayer and LocalPlayer.Character then
         local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
         if humanoid then
@@ -1191,7 +1905,7 @@ for _, player in pairs(Players:GetPlayers()) do
     end
 
     player.CharacterAdded:Connect(function()
-        wait(1)
+        task.wait(1)
         if NamesEnabled or TeamCheckEnabled then
             CreateESP(player)
         end
@@ -1209,11 +1923,13 @@ game:GetService("Players").PlayerRemoving:Connect(function(player)
         for otherPlayer, _ in pairs(ESPObjects) do
             RemoveESP(otherPlayer)
         end
-        
+
         StopSpectating()
-        
+
         StopSpinTroll()
-        
+
+        StopTargetColle()
+
         if AntiAFKGui then
             getgenv().ProstoneAntiAfkExecuted = false
             getgenv().ProstoneTimerActive = false
@@ -1221,6 +1937,9 @@ game:GetService("Players").PlayerRemoving:Connect(function(player)
         end
     end
 end)
+
+-- Démarrer le monitoring des staffs
+StartStaffMonitoring()
 
 print("Prostone Hub - Schibuya RP chargé avec succès!")
 print("Discord: discord.gg/RyQFfVrbWR")
