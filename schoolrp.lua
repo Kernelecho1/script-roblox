@@ -1572,8 +1572,8 @@ local VisualizeStaffButton = ESPTab:CreateButton({
         -- Chercher tous les staffs actuellement connectés
         local staffFound = false
 
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player ~= game.Players.LocalPlayer and player.Team then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Team then
                 local teamName = player.Team.Name:lower()
                 if teamName:find("staff") or teamName:find("admin") or teamName:find("moderator") or teamName:find("mod") then
                     if player.Character then
@@ -1638,7 +1638,7 @@ local BypassACPButton = AntiCheatTab:CreateButton({
 
             local success = false
             local webhookRemotes = {}
-            
+
             -- Fonction récursive pour chercher les RemoteEvents nommés "Webhook"
             local function searchWebhookRemotes(parent)
                 for _, child in pairs(parent:GetChildren()) do
@@ -1649,22 +1649,22 @@ local BypassACPButton = AntiCheatTab:CreateButton({
                     end
                 end
             end
-            
+
             -- Chercher dans ReplicatedStorage
             if game:GetService("ReplicatedStorage") then
                 searchWebhookRemotes(game:GetService("ReplicatedStorage"))
             end
-            
+
             -- Chercher dans Workspace
             if workspace then
                 searchWebhookRemotes(workspace)
             end
-            
+
             -- Chercher dans StarterPlayer
             if game:GetService("StarterPlayer") then
                 searchWebhookRemotes(game:GetService("StarterPlayer"))
             end
-            
+
             -- Bloquer les RemoteEvents trouvés
             if #webhookRemotes > 0 then
                 for _, remote in pairs(webhookRemotes) do
@@ -1672,12 +1672,12 @@ local BypassACPButton = AntiCheatTab:CreateButton({
                     pcall(function()
                         remote:Destroy()
                     end)
-                    
+
                     -- Méthode 2: Remplacer la fonction FireServer
                     pcall(function()
                         remote.FireServer = function() end
                     end)
-                    
+
                     -- Méthode 3: Créer un hook qui bloque les appels
                     pcall(function()
                         local oldFireServer = remote.FireServer
@@ -1690,12 +1690,12 @@ local BypassACPButton = AntiCheatTab:CreateButton({
                 success = true
                 print("Prostone Hub - " .. #webhookRemotes .. " RemoteEvent(s) 'Webhook' bloqué(s)")
             end
-            
+
             -- Afficher le résultat
             if success then
                 -- Marquer que le bypass a été effectué avec succès
                 BypassACPAlreadyDone = true
-                
+
                 Rayfield:Notify({
                     Title = "Bypass ACP",
                     Content = "gg c good fais ce que tu veux",
